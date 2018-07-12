@@ -1,0 +1,17 @@
+li {
+    list-style: none;
+}
+
+.header {
+    margin: 10px auto;
+    text-align: center;
+}
+
+#gameboard {
+    background-color: lightgrey;
+}
+
+
+
+
+

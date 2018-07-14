@@ -2,45 +2,56 @@ var game = {
 
 // ***** Begin question timer
 
-    questionTimeOut: 0,
+    correctAnswersCount: 0,
+    incorrectAnswersCount: 0,
+    unansweredCount: 0,
+    correctAnswer: false,
+    answerTransistor: 0,
+    questionTimeOut: 10,
     questionIntervalId: 0,
     questionNumber: 0,
+    answerTimeOut: 5,
+    answerIntervalId: 0,
+    noAnswer: 'x',
+
 
     questionStartTimer: function() {
-        game.questionTimeOut = 20;
+        console.log("questionStartTimer");
+        game.questionTimeOut = 10;
         game.questionIntervalId = setInterval(game.questionCountDown, 1000);
     },
 
     questionCountDown: function() {
+        console.log("questionCountDown");
         game.questionTimeOut--;
 
-        $('#timer').text(game.questionTimeOut);
+        $('#timer').text("Question Timer: " + game.questionTimeOut);
 
         if (game.questionTimeOut === 0) {
             game.stopQuestionCountDown();
-            game.showAnswer();
+            game.answerStartTimer();
+            game.answerTransistor = 2;
+            game.showAnswer(game.noAnswer);
         }
     },
 
     stopQuestionCountDown: function() {
+        console.log("stopQuestionCountDown");
         clearInterval(game.questionIntervalId);
     },
 
-// ***** Begin answer timer
-
-    answerTimeOut: 0,
-    answerIntervalId: 0,
-    userAnswer: '',
-    test: 1,
+// ***** End question Timer / Begin answer timer
 
     answerStartTimer: function() {
-        game.answerTimeOut = 10;
+        console.log("answerStartTimer");
+        game.answerTimeOut = 5;
         game.answerIntervalId = setInterval(game.answerCountDown, 1000);
     },
 
     answerCountDown: function() {
+        console.log("answerCountDown");
         game.answerTimeOut--;
-        $('#timer').text(game.answerTimeOut);
+        $('#timer').text("Answer Timer: " + game.answerTimeOut);
 
         if (game.answerTimeOut == 0) {
             game.stopAnswerCountDown();
@@ -49,35 +60,75 @@ var game = {
     },
 
     stopAnswerCountDown: function() {
+        console.log("stopAnswerCountDown");
         clearInterval(game.answerIntervalId);
     },
 
-    showAnswer: function(answer) {
-        game.answerStartTimer();
+// ***** End answer timer
 
-        if (answer == questions.answer) {
-            game.stopAnswerCountDown();
-            game.nextQuestion();
+    showAnswer: function(answer) {
+        console.log("showAnswer: question number: " + game.questionNumber);
+        console.log("The user answered: " + answer + " and the answer is " + questions[game.questionNumber].answer);
+        if (answer == questions[game.questionNumber].answer) {
+            console.log("correct answer");
+            game.questionNumber++;
+            game.answerTransistor = 0;
+            game.incrementScore(game.answerTransistor);
+        } else if (answer != questions[game.questionNumber].answer) {
+            console.log("incorrect answer");
+            game.questionNumber++;
+            game.answerTransistor = 1;
+            game.incrementScore(game.answerTransistor);
+        } else {
+            console.log("unanswered");
+            game.questionNumber++;
+            game.answerTransistor = 2;
+            game.incrementScore(answerTransistor);
         }
         // btn-success
         // secondary
     },
 
     nextQuestion: function() {     
-        console.log("next question " + game.questionNumber + ' ' + questions.length);
-
-        if (game.questionNumber == questions.length-1) {
-            console.log("game over");
-            game.gameOver();
-        } else {
-            game.questionNumber++;
-            game.questionStartTimer();
-            game.displayQuestion();
-        }
+        console.log("nextQuestion " + game.questionNumber + ' ' + questions.length);
         
+            game.stopAnswerCountDown();
+            game.questionStartTimer();
+            if (game.questionNumber == questions.length) {
+                game.gameOver();
+            } else {
+                game.displayQuestion();
+            }
+    },
+
+    displayQuestion: function() {
+        console.log("displayQuestion: number " + game.questionNumber);
+        $('#question').text(questions[game.questionNumber].questionText);
+        $('#a').text(questions[game.questionNumber].a);
+        $('#b').text(questions[game.questionNumber].b);
+        $('#c').text(questions[game.questionNumber].c);
+        $('#d').text(questions[game.questionNumber].d);
+    },
+
+    incrementScore: function(correct) {
+        console.log("incrementScore " + correct);
+        if (correct == 0) {
+            game.correctAnswersCount++;
+            console.log("correctAnswersCount " + game.correctAnswersCount);
+            $("#score").html("<h4>Correct answer<h4>")
+        } else if (correct == 1) {
+            game.incorrectAnswersCount++;
+            console.log("incorrectAnswersCount " + game.incorrectAnswersCount);
+            $("#score").html("<h4>Incorrect answer<h4>")
+        } else if (correct == 2) {
+            game.unansweredCount++;
+            console.log("unansweredCount " + game.unansweredCount);
+            $("#score").html("<h4>Question Unaswered<h4>")
+        }
     },
 
     gameOver: function() {
+        console.log("gameOver");
         game.stopAnswerCountDown();
         game.stopQuestionCountDown();
 
@@ -86,18 +137,9 @@ var game = {
         $('#b').hide();
         $('#c').hide();
         $('#d').hide();
-    },
-
-    displayQuestion: function() {
-        $('#question').text(questions[game.questionNumber].questionText);
-        $('#a').text(questions[game.questionNumber].a);
-        $('#b').text(questions[game.questionNumber].b);
-        $('#c').text(questions[game.questionNumber].c);
-        $('#d').text(questions[game.questionNumber].d);
-    },
-
-    displayAnswer: function() {
-
+        $("#score").html("<h4>Correct answers: " + game.correctAnswersCount + "<h4>")
+        $("#score").append("<h4>Incorrect answer: " + game.incorrectAnswersCount + "<h4>")
+        $("#score").append("<h4>Unanswered: " + game.unansweredCount + "<h4>")
     }
 }
 
@@ -107,25 +149,48 @@ var questions = [
    {
         questionText: "What color is an apple?",
         a: "Red", b: "Purple", c: "Black", d: "Silver",
-        answer: this.a,
+        answer: "a",
     },
-
     {
         questionText: "What color is a banana?",
         a: "Red", b: "Purple", c: "Black", d: "Yellow",
-        answer: this.d,
+        answer: "d",
+    },
+    {
+        questionText: "What color is an eggplant?",
+        a: "Blue", b: "Purple", c: "Orange", d: "Green",
+        answer: "b",
+    },
+    {
+        questionText: "What color is an orange?",
+        a: "Brown", b: "White", c: "Orange", d: "Teal",
+        answer: "c",
+    },
+    {
+        questionText: "What color is a lime?",
+        a: "black", b: "Purple", c: "Red", d: "Green",
+        answer: "d",
+    },
+    {
+        questionText: "What color is a lemon?",
+        a: "Yellow", b: "Purple", c: "Black", d: "Silver",
+        answer: "a",
     }
 ]
 
 $(document).ready(function() {
-    var userAnswer;
+    // var userAnswer;
     game.questionStartTimer();
     game.displayQuestion();
+    $('#stop').hide();
 
     $("button").on("click", function() {
-        userAnswer = $(this).val()
-        game.showAnswer()
-
+        console.log("user clicked a button");
+        game.stopQuestionCountDown();
+        if (game.answerIntervalId >= 0) { //this is a bit of hack but necessary to prevent the timer from triggering twice
+            game.stopAnswerCountDown();
+        }
+        game.answerStartTimer();
+        game.showAnswer($(this).val())
     });
-
 });

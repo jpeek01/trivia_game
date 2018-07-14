@@ -7,6 +7,10 @@ li {
     text-align: center;
 }
 
+.jumbotronStyle {
+    border-radius: 15px;
+}
+
 #gameboard {
     background-color: lightgrey;
 }
@@ -27,4 +31,9 @@ li {
     margin: 5px 0px;
 }
 
-
+#score {
+    border-radius: 15px;
+    background: grey;
+    margin: 50px 0px;
+    padding: 10px;
+}

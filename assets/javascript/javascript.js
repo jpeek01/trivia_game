@@ -161,26 +161,26 @@ var questions = [
         a: "Red", b: "Purple", c: "Black", d: "Yellow",
         answer: "d",
     },
-    // {
-    //     questionText: "What color is an eggplant?",
-    //     a: "Blue", b: "Purple", c: "Orange", d: "Green",
-    //     answer: "b",
-    // },
-    // {
-    //     questionText: "What color is an orange?",
-    //     a: "Brown", b: "White", c: "Orange", d: "Teal",
-    //     answer: "c",
-    // },
-    // {
-    //     questionText: "What color is a lime?",
-    //     a: "black", b: "Purple", c: "Red", d: "Green",
-    //     answer: "d",
-    // },
-    // {
-    //     questionText: "What color is a lemon?",
-    //     a: "Yellow", b: "Purple", c: "Black", d: "Silver",
-    //     answer: "a",
-    // }
+    {
+        questionText: "What color is an eggplant?",
+        a: "Blue", b: "Purple", c: "Orange", d: "Green",
+        answer: "b",
+    },
+    {
+        questionText: "What color is an orange?",
+        a: "Brown", b: "White", c: "Orange", d: "Teal",
+        answer: "c",
+    },
+    {
+        questionText: "What color is a lime?",
+        a: "black", b: "Purple", c: "Red", d: "Green",
+        answer: "d",
+    },
+    {
+        questionText: "What color is a lemon?",
+        a: "Yellow", b: "Purple", c: "Black", d: "Silver",
+        answer: "a",
+    }
 ]
 
 $(document).ready(function() {

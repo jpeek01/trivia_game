@@ -69,7 +69,13 @@ var game = {
     showAnswer: function(answer) {
         console.log("showAnswer: question number: " + game.questionNumber);
         console.log("The user answered: " + answer + " and the answer is " + questions[game.questionNumber].answer);
-        if (answer == questions[game.questionNumber].answer) {
+        
+        if (answer == "x") {
+            console.log("unanswered");
+            game.questionNumber++;
+            game.answerTransistor = 2;
+            game.incrementScore(game.answerTransistor);
+        } else if (answer == questions[game.questionNumber].answer) {
             console.log("correct answer");
             game.questionNumber++;
             game.answerTransistor = 0;
@@ -80,10 +86,7 @@ var game = {
             game.answerTransistor = 1;
             game.incrementScore(game.answerTransistor);
         } else {
-            console.log("unanswered");
-            game.questionNumber++;
-            game.answerTransistor = 2;
-            game.incrementScore(answerTransistor);
+            
         }
         // btn-success
         // secondary
@@ -103,6 +106,7 @@ var game = {
 
     displayQuestion: function() {
         console.log("displayQuestion: number " + game.questionNumber);
+        $('#score').hide();
         $('#question').text(questions[game.questionNumber].questionText);
         $('#a').text(questions[game.questionNumber].a);
         $('#b').text(questions[game.questionNumber].b);
@@ -115,15 +119,15 @@ var game = {
         if (correct == 0) {
             game.correctAnswersCount++;
             console.log("correctAnswersCount " + game.correctAnswersCount);
-            $("#score").html("<h4>Correct answer<h4>")
+            $("#score").show().html("<h4>Correct answer<h4>")
         } else if (correct == 1) {
             game.incorrectAnswersCount++;
             console.log("incorrectAnswersCount " + game.incorrectAnswersCount);
-            $("#score").html("<h4>Incorrect answer<h4>")
+            $("#score").show().html("<h4>Incorrect answer<h4>")
         } else if (correct == 2) {
             game.unansweredCount++;
             console.log("unansweredCount " + game.unansweredCount);
-            $("#score").html("<h4>Question Unaswered<h4>")
+            $("#score").show().html("<h4>Question Unaswered<h4>")
         }
     },
 
@@ -131,12 +135,13 @@ var game = {
         console.log("gameOver");
         game.stopAnswerCountDown();
         game.stopQuestionCountDown();
-
-        $('#question').html("<h2>Game Over!<h2>");
-        $('#a').hide();
-        $('#b').hide();
-        $('#c').hide();
-        $('#d').hide();
+        $("timer").hide();
+        $("#question").html("<h2>Game Over!<h2>");
+        $("#a").hide();
+        $("#b").hide();
+        $("#c").hide();
+        $("#d").hide();
+        $("#score").show();
         $("#score").html("<h4>Correct answers: " + game.correctAnswersCount + "<h4>")
         $("#score").append("<h4>Incorrect answer: " + game.incorrectAnswersCount + "<h4>")
         $("#score").append("<h4>Unanswered: " + game.unansweredCount + "<h4>")
@@ -156,33 +161,33 @@ var questions = [
         a: "Red", b: "Purple", c: "Black", d: "Yellow",
         answer: "d",
     },
-    {
-        questionText: "What color is an eggplant?",
-        a: "Blue", b: "Purple", c: "Orange", d: "Green",
-        answer: "b",
-    },
-    {
-        questionText: "What color is an orange?",
-        a: "Brown", b: "White", c: "Orange", d: "Teal",
-        answer: "c",
-    },
-    {
-        questionText: "What color is a lime?",
-        a: "black", b: "Purple", c: "Red", d: "Green",
-        answer: "d",
-    },
-    {
-        questionText: "What color is a lemon?",
-        a: "Yellow", b: "Purple", c: "Black", d: "Silver",
-        answer: "a",
-    }
+    // {
+    //     questionText: "What color is an eggplant?",
+    //     a: "Blue", b: "Purple", c: "Orange", d: "Green",
+    //     answer: "b",
+    // },
+    // {
+    //     questionText: "What color is an orange?",
+    //     a: "Brown", b: "White", c: "Orange", d: "Teal",
+    //     answer: "c",
+    // },
+    // {
+    //     questionText: "What color is a lime?",
+    //     a: "black", b: "Purple", c: "Red", d: "Green",
+    //     answer: "d",
+    // },
+    // {
+    //     questionText: "What color is a lemon?",
+    //     a: "Yellow", b: "Purple", c: "Black", d: "Silver",
+    //     answer: "a",
+    // }
 ]
 
 $(document).ready(function() {
     // var userAnswer;
     game.questionStartTimer();
     game.displayQuestion();
-    $('#stop').hide();
+    $('#score').hide();
 
     $("button").on("click", function() {
         console.log("user clicked a button");
